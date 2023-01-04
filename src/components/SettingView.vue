@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { CaCheckbox } from '@kalimahapps/vue-icons/ca'
-import { CgCheckR } from '@kalimahapps/vue-icons/cg'
+import ReCheckboxBlankLine from './icons/ReCheckboxBlankLine.vue'
+import ReCheckboxLine from './icons/ReCheckboxLine.vue'
 
 const FullscreenEnabled = ref<boolean>(false)
 const ScreenOffEnabled = ref<boolean>(false)
@@ -48,16 +48,16 @@ watch(ScreenOffEnabled, (newScreenOffEnabled) => {
   <div id="setting" class="setting bg-red-800 flex align-middle flex-col">
     <div>Fullscreen</div>
     <div @click.stop="FullscreenEnabled = !FullscreenEnabled">
-      <CaCheckbox v-if="!FullscreenEnabled" />
-      <CgCheckR v-if="FullscreenEnabled" />
+      <ReCheckboxBlankLine v-if="!FullscreenEnabled" />
+      <ReCheckboxLine v-if="FullscreenEnabled" />
     </div>
     <div v-if="ScreenOffExists">Screen-Off</div>
     <div
       @click.stop="ScreenOffEnabled = !ScreenOffEnabled"
       v-if="ScreenOffExists"
     >
-      <CaCheckbox v-if="!ScreenOffEnabled" />
-      <CgCheckR v-if="ScreenOffEnabled" />
+      <ReCheckboxBlankLine v-if="!ScreenOffEnabled" />
+      <ReCheckboxLine v-if="ScreenOffEnabled" />
     </div>
 
     <!-- <input type="checkbox" v-model="ScreenOffEnabled" class="w-12 h-12" /> -->

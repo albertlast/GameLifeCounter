@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const startLive = ref<number>(20)
+const { playerName } = defineProps<{ playerName: string }>()
+const storagePath = `glc${playerName}.live`
+
+const startLive = ref<number>(
+  Number.parseInt(localStorage.getItem(storagePath) ?? '20')
+)
 const CurrentLive = ref(startLive.value)
 
 const partValueShow = ref<boolean>(false)
@@ -9,6 +14,8 @@ let partValueTimeOutID: number | null = null
 const partValueVal = ref<number>(0)
 
 const updatePartValue = async (val: number) => {
+  CurrentLive.value += val
+  localStorage.setItem(storagePath, CurrentLive.value.toString())
   if (partValueShow.value === false) {
     partValueVal.value = 0
     partValueShow.value = true
@@ -20,19 +27,17 @@ const updatePartValue = async (val: number) => {
   }, 2000)
 }
 
-const redurceLive = () => {
-  CurrentLive.value--
+const reduceLive = () => {
   updatePartValue(-1)
 }
 const addLive = () => {
-  CurrentLive.value++
   updatePartValue(1)
 }
 </script>
 
 <template>
   <div class="grid grid-cols-3 w-full">
-    <div @click.stop="redurceLive" class="flex items-center"><p>-</p></div>
+    <div @click.stop="reduceLive" class="flex items-center"><p>-</p></div>
     <div class="grid">
       <div class="small" :class="{ invisible: !partValueShow }">
         {{ partValueVal }}
