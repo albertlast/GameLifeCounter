@@ -36,8 +36,8 @@ const addLive = () => {
 </script>
 
 <template>
-  <div class="grid grid-cols-3 w-full">
-    <div @click.stop="reduceLive" class="flex items-center"><p>-</p></div>
+  <div class="grid grid-template w-full">
+    <div @click.stop="reduceLive" class="flex items-center">-</div>
     <div class="grid">
       <div class="small" :class="{ invisible: !partValueShow }">
         {{ partValueVal }}
@@ -53,5 +53,9 @@ const addLive = () => {
 }
 .invisible {
   opacity: 0;
+}
+
+.grid-template {
+  grid-template-columns: 1fr auto 1fr;
 }
 </style>
