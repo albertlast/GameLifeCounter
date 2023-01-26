@@ -22,12 +22,12 @@ const showSettings = ref<boolean>(false)
     />
     <PlayerView
       class="PlayerView rotate-180 bg-cyan-900"
-      style="height: 50vh"
+      style="height: 50dvh"
       player-name="first"
     />
     <PlayerView
       class="PlayerView bg-yellow-600"
-      style="height: 50vh"
+      style="height: 50dvh"
       player-name="second"
     />
   </main>
