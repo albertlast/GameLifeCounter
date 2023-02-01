@@ -9,6 +9,10 @@ const startLive = ref<number>(
 )
 const CurrentLive = ref(startLive.value)
 
+const CurrentLiveCom = computed(() =>
+  CurrentLive.value.toString().padStart(2, '0')
+)
+
 const partValueShow = ref<boolean>(false)
 let partValueTimeOutID: number | null = null
 const partValueVal = ref<number>(0)
@@ -48,7 +52,7 @@ const addLive = () => {
       <div class="small" :class="{ invisible: !partValueShow }">
         {{ partValueCom }}
       </div>
-      <div>{{ CurrentLive }}</div>
+      <div>{{ CurrentLiveCom }}</div>
     </div>
     <div @click.stop="addLive" class="flex items-center justify-end">+</div>
   </div>

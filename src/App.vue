@@ -41,8 +41,8 @@ const showSettings = ref<boolean>(false)
 <style scoped>
 .openSetting {
   position: absolute;
-  top: 50%;
-  right: 50%;
+  top: 50dvh;
+  right: 50dvw;
   transform: translate(50%, -50%);
   z-index: 5;
   font-size: min(14vh, 14vw);
