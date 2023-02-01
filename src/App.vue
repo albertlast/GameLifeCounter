@@ -13,6 +13,7 @@ const resetPlayers = () => {
   console.log('asd')
   p1Ref.value.resetLive()
   p2Ref.value.resetLive()
+  showSettings.value = false
 }
 </script>
 
