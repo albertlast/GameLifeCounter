@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue'
 import ReCheckboxBlankLine from './icons/ReCheckboxBlankLine.vue'
 import ReCheckboxLine from './icons/ReCheckboxLine.vue'
+import TiRefresh from './icons/TiRefresh.vue'
 
 const FullscreenEnabled = ref<boolean>(false)
 const ScreenOffEnabled = ref<boolean>(false)
@@ -9,7 +10,10 @@ let wakeLock: null | AbortController = null
 const errorSceenOff = ref<string | null>(null)
 const ScreenOffExists = ref<boolean>(typeof navigator.wakeLock === 'object')
 
-defineEmits<{ (e: 'update:close', value: boolean): void }>()
+defineEmits<{
+  (e: 'update:close', value: boolean): void
+  (e: 'update:reset', value: boolean): void
+}>()
 
 watch(FullscreenEnabled, async (newFullscreenEnabled) => {
   if (newFullscreenEnabled) document.documentElement.requestFullscreen()
@@ -62,11 +66,17 @@ watch(ScreenOffEnabled, (newScreenOffEnabled) => {
 
     <!-- <input type="checkbox" v-model="ScreenOffEnabled" class="w-12 h-12" /> -->
     <div v-if="errorSceenOff">{{ errorSceenOff }}</div>
-    <div @click.stop="$emit('update:close', true)">close</div>
+    <div class="grid gridCancelReset">
+      <div @click.stop="$emit('update:close', true)">close</div>
+      <div @click.stop="$emit('update:reset')"><TiRefresh /></div>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.gridCancelReset {
+  grid-template-columns: 1fr auto;
+}
 .setting {
   position: absolute;
   inset: 0;

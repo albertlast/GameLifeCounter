@@ -43,6 +43,12 @@ const reduceLive = () => {
 const addLive = () => {
   updatePartValue(1)
 }
+
+const resetLive = () => {
+  CurrentLive.value = 20
+}
+
+defineExpose({ resetLive })
 </script>
 
 <template>
