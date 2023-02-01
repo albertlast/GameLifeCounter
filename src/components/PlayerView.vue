@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const { playerName } = defineProps<{ playerName: string }>()
 const storagePath = `glc${playerName}.live`
@@ -27,6 +27,12 @@ const updatePartValue = async (val: number) => {
   }, 2000)
 }
 
+const partValueCom = computed(() => {
+  return new Intl.NumberFormat('en-US', {
+    signDisplay: 'exceptZero',
+  }).format(partValueVal.value)
+})
+
 const reduceLive = () => {
   updatePartValue(-1)
 }
@@ -40,7 +46,7 @@ const addLive = () => {
     <div @click.stop="reduceLive" class="flex items-center">-</div>
     <div class="grid">
       <div class="small" :class="{ invisible: !partValueShow }">
-        {{ partValueVal }}
+        {{ partValueCom }}
       </div>
       <div>{{ CurrentLive }}</div>
     </div>
