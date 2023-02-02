@@ -11,6 +11,7 @@
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false"
   },
   "dependencies": {
+    "@radial-color-picker/vue-color-picker": "^5.0.1",
     "vue": "^3.2.45"
   },
   "devDependencies": {

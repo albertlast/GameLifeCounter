@@ -2,7 +2,6 @@
 import { ref, watch } from 'vue'
 import ReCheckboxBlankLine from './icons/ReCheckboxBlankLine.vue'
 import ReCheckboxLine from './icons/ReCheckboxLine.vue'
-import TiRefresh from './icons/TiRefresh.vue'
 
 const FullscreenEnabled = ref<boolean>(false)
 const ScreenOffEnabled = ref<boolean>(false)
@@ -12,7 +11,6 @@ const ScreenOffExists = ref<boolean>(typeof navigator.wakeLock === 'object')
 
 defineEmits<{
   (e: 'update:close', value: boolean): void
-  (e: 'update:reset', value: boolean): void
 }>()
 
 watch(FullscreenEnabled, async (newFullscreenEnabled) => {
@@ -68,7 +66,6 @@ watch(ScreenOffEnabled, (newScreenOffEnabled) => {
     <div v-if="errorSceenOff">{{ errorSceenOff }}</div>
     <div class="grid gridCancelReset">
       <div @click.stop="$emit('update:close', true)">close</div>
-      <div @click.stop="$emit('update:reset')"><TiRefresh /></div>
     </div>
   </div>
 </template>
