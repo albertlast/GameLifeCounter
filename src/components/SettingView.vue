@@ -65,7 +65,7 @@ watch(ScreenOffEnabled, (newScreenOffEnabled) => {
     <!-- <input type="checkbox" v-model="ScreenOffEnabled" class="w-12 h-12" /> -->
     <div v-if="errorSceenOff">{{ errorSceenOff }}</div>
     <div class="grid gridCancelReset">
-      <div @click.stop="$emit('update:close', true)">close</div>
+      <div @click.stop="$emit('update:close', true)">Close</div>
     </div>
   </div>
 </template>
