@@ -47,7 +47,10 @@ watch(ScreenOffEnabled, (newScreenOffEnabled) => {
 </script>
 
 <template>
-  <div id="setting" class="setting bg-red-800 flex align-middle flex-col">
+  <div
+    id="setting"
+    class="setting bg-red-800 flex align-middle flex-col items-center"
+  >
     <div>Fullscreen</div>
     <div @click.stop="FullscreenEnabled = !FullscreenEnabled">
       <ReCheckboxBlankLine v-if="!FullscreenEnabled" />
