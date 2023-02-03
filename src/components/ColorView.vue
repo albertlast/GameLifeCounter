@@ -40,15 +40,25 @@ let resetColor = () => {
       <TiRefreshVue @click.stop="resetColor" />
     </div>
 
-    <div class="PlayerView p1Background" style="height: 50dvh">
-      <color-picker :hue="p1Hue" @input="updateColor1" />
+    <div
+      class="PlayerView p1Background flex justify-center items-center"
+      style="height: 50dvh"
+    >
+      <color-picker class="colorPicker" :hue="p1Hue" @input="updateColor1" />
     </div>
-    <div class="PlayerView p2Background" style="height: 50dvh">
-      <color-picker :hue="p2Hue" @input="updateColor2" />
+    <div
+      class="PlayerView p2Background flex justify-center items-center"
+      style="height: 50dvh"
+    >
+      <color-picker class="colorPicker" :hue="p2Hue" @input="updateColor2" />
     </div>
   </div>
 </template>
 <style scoped>
+.colorPicker {
+  height: 1.3em;
+  width: 1.3em;
+}
 .setting {
   position: absolute;
   inset: 0;
