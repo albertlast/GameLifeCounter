@@ -13,9 +13,9 @@ export default defineConfig({
       manifest: {
         icons: [
           {
-            src: './icons/heart.png',
-            sizes: '50x50',
-            type: 'image/png',
+            src: './icons/heart.svg',
+            sizes: '512x512',
+            type: 'image/svg',
             purpose: 'any maskable',
           },
         ],
