@@ -8,7 +8,8 @@
     "preview": "vite preview",
     "test:unit": "vitest --environment jsdom --root src/",
     "build-only": "vite build",
-    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false"
+    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
+    "test": "npm run build-only"
   },
   "dependencies": {
     "@radial-color-picker/vue-color-picker": "^5.0.1",
