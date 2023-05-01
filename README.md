@@ -1,11 +1,13 @@
 # GameLiveCounter
 
 Is a basic live counter for games,
-it can handle two person at the same time.
+it can handle two persons at the same time.
 
-You can use the setting menu to switch to fullscreen,
-also when android with chromebase browser is used,
+You can use the setting menu to switch to fullscreen.
+When android with chromebase browser is used,
 you can also disable the screensaver (enable wakelock).
+
+Support pwa -> can be installed locally on supported devices.
 
 ![App](doc/App.png)
 
