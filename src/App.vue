@@ -20,8 +20,8 @@ const p1Hue = ref<number>(32)
 const p2Hue = ref<number>(222)
 
 const resetPlayers = () => {
-  p1Ref.value?.resetLive()
-  p2Ref.value?.resetLive()
+  p1Ref.value?.resetLife()
+  p2Ref.value?.resetLife()
   showSettings.value = false
 }
 
