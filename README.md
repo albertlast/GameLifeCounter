@@ -1,6 +1,6 @@
-# GameLiveCounter
+# GameLifeCounter
 
-Is a basic live counter for games,
+Is a basic life counter for games,
 it can handle two persons at the same time.
 
 You can use the setting menu to switch to fullscreen.
@@ -13,7 +13,7 @@ Support pwa -> can be installed locally on supported devices.
 
 ## Requirments
 
-Only a webserver to deliver the js files is needed,
+Only a webserver to delifer the js files is needed,
 the website runs full on client side.
 
 ## Project Setup
