@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
+const delayFirstHold = 1000
+const delayNextHold = 500
+
 const { playerName } = defineProps<{ playerName: string }>()
 const storagePath = `glc${playerName}.life`
 
@@ -37,11 +40,59 @@ const partValueCom = computed(() => {
   }).format(partValueVal.value)
 })
 
-const reduceLife = () => {
-  updatePartValue(-1)
+let holdingReduceLifeHoldDown = false
+let holdingAddLifeHoldDown = false
+let holdingHoldDownID: number | null = null
+let holdingHoldDownOnce = false
+
+const addLifeHoldUp = () => {
+  holdingAddLifeHoldDown = false
+  clearTimeout(holdingHoldDownID)
+  if (holdingHoldDownOnce === false) {
+    updatePartValue(1)
+  }
+  holdingHoldDownOnce = false
 }
-const addLife = () => {
-  updatePartValue(1)
+
+const addLifeHoldDown = () => {
+  holdingAddLifeHoldDown = true
+
+  holdingHoldDownID = setTimeout(() => {
+    again(10)
+  }, delayFirstHold)
+}
+
+const reduceLifeHoldDown = () => {
+  holdingReduceLifeHoldDown = true
+
+  holdingHoldDownID = setTimeout(() => {
+    again(-10)
+  }, delayFirstHold)
+}
+
+const reduceLifeHoldUp = () => {
+  holdingReduceLifeHoldDown = false
+  clearTimeout(holdingHoldDownID)
+  if (holdingHoldDownOnce === false) {
+    updatePartValue(-1)
+  }
+  holdingHoldDownOnce = false
+}
+
+const again = (value: number) => {
+  holdingHoldDownOnce = true
+  if (value < 0 && !holdingReduceLifeHoldDown) {
+    clearTimeout(holdingHoldDownID)
+    return
+  }
+  if (value > 0 && !holdingAddLifeHoldDown) {
+    clearTimeout(holdingHoldDownID)
+    return
+  }
+  holdingHoldDownID = setTimeout(() => {
+    again(value)
+  }, delayNextHold)
+  updatePartValue(value)
 }
 
 const resetLife = () => {
@@ -53,14 +104,26 @@ defineExpose({ resetLife })
 
 <template>
   <div class="grid grid-template w-full">
-    <div @click.stop="reduceLife" class="flex items-center">-</div>
+    <div
+      @pointerdown="reduceLifeHoldDown"
+      @pointerup="reduceLifeHoldUp"
+      class="flex items-center"
+    >
+      -
+    </div>
     <div class="grid">
       <div class="small" :class="{ invisible: !partValueShow }">
         {{ partValueCom }}
       </div>
       <div>{{ CurrentLifeCom }}</div>
     </div>
-    <div @click.stop="addLife" class="flex items-center justify-end">+</div>
+    <div
+      @pointerdown="addLifeHoldDown"
+      @pointerup="addLifeHoldUp"
+      class="flex items-center justify-end"
+    >
+      +
+    </div>
   </div>
 </template>
 <style scoped>

@@ -5,6 +5,8 @@ it can handle two persons at the same time.
 
 [App](https://albertlast.github.io/GameLifeCounter/)
 
+Keeping holding the - or + area to jump 10 steps
+
 You can use the setting menu to switch to fullscreen.
 When android with chromebase browser is used,
 you can also disable the screensaver (enable wakelock).
