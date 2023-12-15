@@ -3,6 +3,8 @@
 Is a basic life counter for games,
 it can handle two persons at the same time.
 
+[App](https://albertlast.github.io/GameLifeCounter/)
+
 You can use the setting menu to switch to fullscreen.
 When android with chromebase browser is used,
 you can also disable the screensaver (enable wakelock).
