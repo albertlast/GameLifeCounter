@@ -57,6 +57,7 @@ const addLifeHoldUp = () => {
 const addLifeHoldDown = () => {
   holdingAddLifeHoldDown = true
 
+  clearTimeout(holdingHoldDownID)
   holdingHoldDownID = setTimeout(() => {
     again(10)
   }, delayFirstHold)
@@ -65,6 +66,7 @@ const addLifeHoldDown = () => {
 const reduceLifeHoldDown = () => {
   holdingReduceLifeHoldDown = true
 
+  clearTimeout(holdingHoldDownID)
   holdingHoldDownID = setTimeout(() => {
     again(-10)
   }, delayFirstHold)
@@ -72,6 +74,7 @@ const reduceLifeHoldDown = () => {
 
 const reduceLifeHoldUp = () => {
   holdingReduceLifeHoldDown = false
+
   clearTimeout(holdingHoldDownID)
   if (holdingHoldDownOnce === false) {
     updatePartValue(-1)
