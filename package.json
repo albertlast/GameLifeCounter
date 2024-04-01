@@ -13,7 +13,7 @@
     "test": "npm run build-only"
   },
   "dependencies": {
-    "@radial-color-picker/vue-color-picker": "^5.0.1",
+    "@radial-color-picker/vue-color-picker": "^6.0.0",
     "vue": "^3.3.4"
   },
   "devDependencies": {
