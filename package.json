@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@radial-color-picker/vue-color-picker": "^6.0.0",
-    "vue": "^3.4.31"
+    "vue": "^3.4.33"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.7",
