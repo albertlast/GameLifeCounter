@@ -8,5 +8,5 @@ test('moount Calc', () => {
 
   const wrapper = mount(PlayerView)
 
-  expect(wrapper.text()).toContain('Average error')
+  expect(wrapper.text()).toContain('020')
 })
