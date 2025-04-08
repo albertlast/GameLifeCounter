@@ -94,7 +94,7 @@ onMounted(() => {
 
 <style>
 .PlayerView {
-  font-size: min(28vh, 30vw);
+  font-size: min(26vh, 30vw);
 }
 .p1Background {
   background-color: hsl(v-bind(p1Hue), 95%, 44%);
