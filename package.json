@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@radial-color-picker/vue-color-picker": "^6.0.0",
-    "vue": "^3.5.17"
+    "vue": "^3.5.27"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.13",
