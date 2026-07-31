@@ -1,0 +1,200 @@
+/*
+  Design tokens for GameLifeCounter.
+
+  Everything the UI paints comes from these variables. A theme only has to
+  redefine the token block; components never hard-code colours. The per-player
+  hue is injected as `--player-hue` on the panel element.
+
+  IMPORTANT: a token whose value reads `--player-hue` must be declared on the
+  panel itself (see the `[data-theme] .panel` blocks below). `var()` inside a
+  custom property is substituted in the context of the element that *declares*
+  it, so the same token declared on `:root` would always resolve the hue to its
+  fallback and paint every player the same colour.
+*/
+
+:root {
+  color-scheme: dark;
+
+  --font-ui: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-display: var(--font-ui);
+
+  --radius-lg: 26px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
+
+  --ease: cubic-bezier(0.22, 0.9, 0.24, 1);
+  --dur-fast: 130ms;
+  --dur: 220ms;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+
+  /* Chrome = menus, sheets and everything floating above the stage. */
+  --chrome-bg: rgba(17, 18, 25, 0.94);
+  --chrome-raised: rgba(255, 255, 255, 0.07);
+  --chrome-fg: #f4f6fb;
+  --chrome-muted: rgba(244, 246, 251, 0.6);
+  --chrome-border: rgba(255, 255, 255, 0.14);
+  --chrome-shadow: 0 24px 70px rgba(0, 0, 0, 0.6);
+  --accent: #7cf5d5;
+  --accent-contrast: #06231c;
+  --danger: #ff7a7a;
+
+  /* Stage + panel defaults, overridden per theme. */
+  --stage-bg: #0b0d13;
+  --stage-pad: 0px;
+  --stage-gap: 0px;
+  --panel-radius: 0px;
+  --panel-fg: #ffffff;
+  --panel-border: none;
+  --panel-shadow: none;
+  --panel-pad: 0px;
+  --life-weight: 800;
+  --life-letter-spacing: -0.04em;
+  --life-shadow: none;
+  --zone-size: 100%;
+  --zone-radius: 0;
+  --zone-bg: transparent;
+  --zone-border: none;
+  --zone-opacity: 0.55;
+  --name-opacity: 0.72;
+}
+
+/* ── Pulse ───────────────────────────────────────────────────────────────
+   Successor to the original look: saturated colour from edge to edge and
+   numerals as big as the seat allows. */
+[data-theme='pulse'] {
+  --stage-bg: #08080c;
+  --stage-pad: 0px;
+  --stage-gap: 2px;
+  --panel-radius: 0px;
+  --panel-pad: 0px;
+  --panel-fg: #ffffff;
+  --life-weight: 800;
+  --zone-opacity: 0.5;
+  --name-opacity: 0.68;
+}
+
+[data-theme='pulse'] .panel {
+  --panel-bg: linear-gradient(
+    155deg,
+    hsl(var(--player-hue, 0) 96% 54%) 0%,
+    hsl(var(--player-hue, 0) 90% 40%) 55%,
+    hsl(var(--player-hue, 0) 92% 31%) 100%
+  );
+  --panel-shadow: inset 0 0 120px hsl(var(--player-hue, 0) 100% 22% / 0.55);
+  --life-shadow: 0 6px 34px hsl(var(--player-hue, 0) 100% 18% / 0.65);
+  --chip-bg: rgba(0, 0, 0, 0.22);
+  --chip-border: rgba(255, 255, 255, 0.28);
+}
+
+/* ── Arena ───────────────────────────────────────────────────────────────
+   New direction: dark stage, each seat is a floating card with explicit
+   controls and a light, wide life readout. */
+[data-theme='arena'] {
+  --stage-bg: radial-gradient(130% 120% at 50% 0%, #161c2b 0%, #0a0c12 55%, #06070b 100%);
+  --stage-pad: 10px;
+  --stage-gap: 10px;
+  --panel-radius: var(--radius-lg);
+  --panel-pad: clamp(8px, 2.5%, 22px);
+  --panel-fg: #eef2ff;
+  --life-weight: 300;
+  --life-letter-spacing: -0.05em;
+  --zone-size: min(26cqw, 30cqh);
+  --zone-radius: 999px;
+  --zone-opacity: 0.9;
+  --name-opacity: 0.85;
+}
+
+[data-theme='arena'] .panel {
+  --panel-bg:
+    linear-gradient(
+      160deg,
+      hsl(var(--player-hue, 0) 62% 24% / 0.92) 0%,
+      hsl(var(--player-hue, 0) 45% 11% / 0.94) 70%
+    ),
+    #0d0f16;
+  --panel-border: 1px solid hsl(var(--player-hue, 0) 75% 62% / 0.34);
+  --panel-shadow:
+    0 18px 44px rgba(0, 0, 0, 0.5), inset 0 1px 0 hsl(var(--player-hue, 0) 90% 80% / 0.18);
+  --life-shadow: 0 0 46px hsl(var(--player-hue, 0) 95% 55% / 0.28);
+  --zone-bg: hsl(var(--player-hue, 0) 70% 70% / 0.12);
+  --zone-border: 1px solid hsl(var(--player-hue, 0) 80% 70% / 0.3);
+  --chip-bg: hsl(var(--player-hue, 0) 60% 70% / 0.12);
+  --chip-border: hsl(var(--player-hue, 0) 75% 70% / 0.32);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  /* Mobile browsers: follow the viewport as the address bar collapses. */
+  height: 100dvh;
+}
+
+body {
+  background: var(--stage-bg);
+  color: var(--chrome-fg);
+  font-family: var(--font-ui);
+  /* 16px keeps iOS from zooming when an input in the settings sheet is focused. */
+  font-size: 16px;
+  line-height: 1.4;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/*
+  Grows a small control's touch target to roughly 44px without changing how it
+  looks — for the icon buttons that cannot afford to get visually bigger.
+*/
+.touch-target {
+  position: relative;
+}
+
+.touch-target::after {
+  content: '';
+  position: absolute;
+  inset: -10px;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

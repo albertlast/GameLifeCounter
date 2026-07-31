@@ -1,19 +1,20 @@
 {
   "name": "gamelifecounter",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
-    "preview": "vite preview",
-    "test:unit": "vitest --environment jsdom --root src/",
     "build-only": "vite build",
-    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
-    "test": "npm run build-only"
+    "preview": "vite preview",
+    "type-check": "vue-tsc --build",
+    "test": "vitest run",
+    "test:unit": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "format": "prettier --write \"{src,.}/**/*.{ts,vue,css,json,html}\""
   },
   "dependencies": {
-    "@radial-color-picker/vue-color-picker": "^6.0.0",
     "vue": "^3.5.27"
   },
   "devDependencies": {
@@ -27,6 +28,7 @@
     "jsdom": "^27.4.0",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.5.3",
+    "prettier": "^3.4.2",
     "tailwindcss": "^4.1.10",
     "typescript": "^5.8.2",
     "vite": "^7.3.1",
