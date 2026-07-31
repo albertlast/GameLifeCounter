@@ -148,6 +148,39 @@ describe('table configuration', () => {
     expect(game.layout.value.seats).toHaveLength(5)
   })
 
+  it('seats the head layout once three players are at the table', () => {
+    const game = createGameStore()
+    game.setPlayerCount(3)
+
+    game.setLayout('head')
+
+    expect(game.state.layoutId).toBe('head')
+    expect(game.tableLayout.value.name).toBe('Head of table')
+    expect(game.layout.value.seats.map((seat) => seat.rotation)).toEqual([180, 90, 270])
+  })
+
+  it('refuses the head layout at a count it cannot seat', () => {
+    const game = createGameStore()
+    game.setPlayerCount(4)
+
+    game.setLayout('head')
+
+    expect(game.state.layoutId).toBe('facing')
+  })
+
+  it('drops the head layout when the count stops fitting it', () => {
+    const game = createGameStore()
+    game.setPlayerCount(5)
+    game.setLayout('head')
+
+    game.setPlayerCount(4)
+    expect(game.state.layoutId).toBe('facing')
+
+    // Back to a count it seats: still has to be chosen again, not resurrected.
+    game.setPlayerCount(3)
+    expect(game.state.layoutId).toBe('facing')
+  })
+
   it('only accepts known themes', () => {
     const game = createGameStore()
 
@@ -234,6 +267,9 @@ describe('sanitizeState', () => {
     expect(state.themeId).toBe('pulse')
     expect(state.layoutId).toBe('facing')
     expect(state.playerCount).toBe(6)
+    expect(sanitizeState({ layoutId: 'head', playerCount: 3 } as never).layoutId).toBe('head')
+    // A stored pairing the layout cannot seat is repaired, not carried over.
+    expect(sanitizeState({ layoutId: 'head', playerCount: 4 } as never).layoutId).toBe('facing')
     expect(state.startingLife).toBe(20)
     expect(state.players).toHaveLength(6)
     expect(state.players[0]).toMatchObject({

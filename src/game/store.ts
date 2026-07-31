@@ -2,7 +2,14 @@ import { computed, reactive, readonly } from 'vue'
 import type { CounterKind, GameState, Player } from './types'
 import { MAX_PLAYERS } from './types'
 import { DEFAULT_PRESET_ID, findPreset } from './presets'
-import { DEFAULT_LAYOUT_ID, clampPlayerCount, findLayout, isLayoutId, seatLayout } from './layouts'
+import {
+  DEFAULT_LAYOUT_ID,
+  clampPlayerCount,
+  findLayout,
+  isLayoutId,
+  seatLayout,
+  supportsPlayerCount,
+} from './layouts'
 import { DEFAULT_THEME_ID, isThemeId } from '../theme/themes'
 import { STORAGE_KEY, clearLegacyState, readJson, readLegacyState, writeJson } from './storage'
 
@@ -50,12 +57,14 @@ export function sanitizeState(raw: Partial<GameState> | null): GameState {
   const preset = findPreset(typeof raw.presetId === 'string' ? raw.presetId : base.presetId)
   const startingLife = Math.round(toFiniteNumber(raw.startingLife, preset.startingLife))
   const storedPlayers = Array.isArray(raw.players) ? raw.players : []
+  const playerCount = clampPlayerCount(toFiniteNumber(raw.playerCount, base.playerCount))
+  const storedLayout = isLayoutId(raw.layoutId) ? raw.layoutId : base.layoutId
 
   return {
     presetId: preset.id,
     themeId: isThemeId(raw.themeId) ? raw.themeId : base.themeId,
-    layoutId: isLayoutId(raw.layoutId) ? raw.layoutId : base.layoutId,
-    playerCount: clampPlayerCount(toFiniteNumber(raw.playerCount, base.playerCount)),
+    layoutId: supportsPlayerCount(storedLayout, playerCount) ? storedLayout : base.layoutId,
+    playerCount,
     startingLife,
     players: Array.from({ length: MAX_PLAYERS }, (_, index) => {
       const fallback = defaultPlayer(index, startingLife)
@@ -151,6 +160,11 @@ export function createGameStore(initial?: Partial<GameState>) {
 
   const setPlayerCount = (count: number) => {
     state.playerCount = clampPlayerCount(count)
+    // `head` only seats 3 or 5, so leaving it selected would silently render
+    // something else. Drop back to the default rather than lie about it.
+    if (!supportsPlayerCount(state.layoutId, state.playerCount)) {
+      state.layoutId = DEFAULT_LAYOUT_ID
+    }
     persist()
   }
 
@@ -184,7 +198,7 @@ export function createGameStore(initial?: Partial<GameState>) {
   }
 
   const setLayout = (layoutId: string) => {
-    if (!isLayoutId(layoutId)) return
+    if (!isLayoutId(layoutId) || !supportsPlayerCount(layoutId, state.playerCount)) return
     state.layoutId = layoutId
     persist()
   }

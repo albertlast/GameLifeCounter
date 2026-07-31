@@ -15,6 +15,10 @@ A life counter for board and card games that runs entirely in the browser.
     read horizontally for everybody.
   - _Sides_ turns the same table a quarter turn for players sitting along the
     left and right edge.
+  - _Head of table_ (3 or 5 players) is the hybrid an odd count falls into at a
+    real table: one player at the head, the other two or four facing each other
+    down the sides. Offered only where the remainder splits evenly between the
+    two sides.
   - _Same side_ stacks every seat upright, for when nobody sits opposite.
 
   Each seat is rotated towards the edge its player sits at, so nobody reads

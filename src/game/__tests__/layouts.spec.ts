@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { TABLE_LAYOUTS, clampPlayerCount, findLayout, isLayoutId, seatLayout } from '../layouts'
+import {
+  TABLE_LAYOUTS,
+  clampPlayerCount,
+  findLayout,
+  isLayoutId,
+  layoutsForPlayers,
+  seatLayout,
+  supportsPlayerCount,
+} from '../layouts'
 import { MAX_PLAYERS, MIN_PLAYERS } from '../types'
 
 describe('clampPlayerCount', () => {
@@ -92,8 +100,8 @@ describe('seatLayout', () => {
 })
 
 describe('table layouts', () => {
-  it('offers facing, sides and same-side seating', () => {
-    expect(TABLE_LAYOUTS.map((layout) => layout.id)).toEqual(['facing', 'sides', 'stacked'])
+  it('offers facing, sides, head and same-side seating', () => {
+    expect(TABLE_LAYOUTS.map((layout) => layout.id)).toEqual(['facing', 'sides', 'head', 'stacked'])
     expect(isLayoutId('sides')).toBe(true)
     expect(isLayoutId('diagonal')).toBe(false)
     expect(findLayout('diagonal').id).toBe('facing')
@@ -128,6 +136,62 @@ describe('table layouts', () => {
       90, 90, 90, 270, 270,
     ])
     expect(seatLayout(5, 'sides')).toMatchObject({ columns: 2, rows: 6 })
+  })
+
+  /**
+   * The hybrid an odd count falls into at a real table: one player at the head,
+   * the even remainder facing each other across the two long sides.
+   */
+  it('seats one player at the head and faces the rest across the sides', () => {
+    const three = seatLayout(3, 'head')
+    expect(three).toMatchObject({ columns: 2, rows: 2 })
+    expect(three.seats.map((seat) => seat.rotation)).toEqual([180, 90, 270])
+    // The head seat spans the full width of the table.
+    expect(three.seats[0].gridArea).toBe('1 / 1 / 2 / 3')
+
+    const five = seatLayout(5, 'head')
+    expect(five).toMatchObject({ columns: 2, rows: 3 })
+    expect(five.seats.map((seat) => seat.rotation)).toEqual([180, 90, 90, 270, 270])
+    expect(five.seats[0].gridArea).toBe('1 / 1 / 2 / 3')
+  })
+
+  it('splits the side seats evenly, left column then right', () => {
+    for (const count of [3, 5]) {
+      const sideSeats = seatLayout(count, 'head').seats.slice(1)
+      const left = sideSeats.filter((seat) => seat.rotation === 90)
+      const right = sideSeats.filter((seat) => seat.rotation === 270)
+
+      expect(left, `players=${count}`).toHaveLength((count - 1) / 2)
+      expect(right, `players=${count}`).toHaveLength((count - 1) / 2)
+
+      for (const seat of sideSeats) {
+        const column = Number.parseInt(seat.gridArea.split('/')[1]!.trim(), 10)
+        expect(seat.rotation, `players=${count} column=${column}`).toBe(column === 1 ? 90 : 270)
+      }
+    }
+  })
+
+  it('offers the head layout only where the remainder splits evenly', () => {
+    expect(layoutsForPlayers(3).map((layout) => layout.id)).toContain('head')
+    expect(layoutsForPlayers(5).map((layout) => layout.id)).toContain('head')
+
+    for (const count of [2, 4, 6]) {
+      expect(
+        layoutsForPlayers(count).map((layout) => layout.id),
+        `players=${count}`,
+      ).not.toContain('head')
+      expect(supportsPlayerCount('head', count), `players=${count}`).toBe(false)
+      // Falls back rather than rendering a seat map it does not have.
+      expect(seatLayout(count, 'head'), `players=${count}`).toEqual(seatLayout(count, 'facing'))
+    }
+  })
+
+  it('offers every other layout at every count', () => {
+    for (let count = MIN_PLAYERS; count <= MAX_PLAYERS; count += 1) {
+      for (const id of ['facing', 'sides', 'stacked']) {
+        expect(supportsPlayerCount(id, count), `${id}/${count}`).toBe(true)
+      }
+    }
   })
 
   it('stacks every seat upright for one-sided seating', () => {

@@ -15,12 +15,18 @@ interface LayoutSpec {
   seats: SeatSpec[]
 }
 
-export type LayoutId = 'facing' | 'sides' | 'stacked'
+export type LayoutId = 'facing' | 'sides' | 'stacked' | 'head'
 
 export interface LayoutDefinition {
   id: LayoutId
   name: string
   description: string
+  /**
+   * Player counts the layout is offered for. Omitted means every count; only
+   * `head` restricts itself, because it needs an even number of players left
+   * over to split between the two sides.
+   */
+  playerCounts?: PlayerCount[]
 }
 
 export const TABLE_LAYOUTS: LayoutDefinition[] = [
@@ -33,6 +39,12 @@ export const TABLE_LAYOUTS: LayoutDefinition[] = [
     id: 'sides',
     name: 'Sides',
     description: 'Players sit along the left and right edge; seats turn sideways.',
+  },
+  {
+    id: 'head',
+    name: 'Head of table',
+    description: 'One player at the head, the rest facing each other down the sides.',
+    playerCounts: [3, 5],
   },
   {
     id: 'stacked',
@@ -149,6 +161,39 @@ function turn(spec: LayoutSpec): LayoutSpec {
   }
 }
 
+/**
+ * `head` is the hybrid seating an odd player count falls into at a real table:
+ * one player takes the head, the remaining even number splits between the two
+ * long sides and faces across. The head seat spans the full width at 180° like
+ * a `facing` top row; the side seats take the left and right edge rotations
+ * (90° / 270°) the same way `sides` does.
+ *
+ * Seats run head first, then the left column top to bottom, then the right, to
+ * match the order `sides` produces.
+ */
+const HEAD_SPECS: Partial<Record<PlayerCount, LayoutSpec>> = {
+  3: {
+    columns: 2,
+    rows: 2,
+    seats: [
+      { row: 1, column: 1, columnSpan: 2, rotation: 180 },
+      { row: 2, column: 1, rotation: 90 },
+      { row: 2, column: 2, rotation: 270 },
+    ],
+  },
+  5: {
+    columns: 2,
+    rows: 3,
+    seats: [
+      { row: 1, column: 1, columnSpan: 2, rotation: 180 },
+      { row: 2, column: 1, rotation: 90 },
+      { row: 3, column: 1, rotation: 90 },
+      { row: 2, column: 2, rotation: 270 },
+      { row: 3, column: 2, rotation: 270 },
+    ],
+  },
+}
+
 /** `stacked` puts every seat in its own upright row, for one-sided seating. */
 function stacked(playerCount: PlayerCount): LayoutSpec {
   return {
@@ -168,6 +213,8 @@ function specFor(playerCount: PlayerCount, layoutId: LayoutId): LayoutSpec {
       return turn(FACING_SPECS[playerCount])
     case 'stacked':
       return stacked(playerCount)
+    case 'head':
+      return HEAD_SPECS[playerCount] ?? FACING_SPECS[playerCount]
     default:
       return FACING_SPECS[playerCount]
   }
@@ -176,6 +223,17 @@ function specFor(playerCount: PlayerCount, layoutId: LayoutId): LayoutSpec {
 export function clampPlayerCount(count: number): PlayerCount {
   if (!Number.isFinite(count)) return MIN_PLAYERS
   return Math.min(MAX_PLAYERS, Math.max(MIN_PLAYERS, Math.round(count))) as PlayerCount
+}
+
+/** Whether a layout has a seat map for this many players. */
+export function supportsPlayerCount(layoutId: string, playerCount: number): boolean {
+  const allowed = findLayout(layoutId).playerCounts
+  return !allowed || allowed.includes(clampPlayerCount(playerCount))
+}
+
+/** The layouts worth offering at a given player count, in picker order. */
+export function layoutsForPlayers(playerCount: number): LayoutDefinition[] {
+  return TABLE_LAYOUTS.filter((layout) => supportsPlayerCount(layout.id, playerCount))
 }
 
 export function seatLayout(playerCount: number, layoutId: string = DEFAULT_LAYOUT_ID): SeatLayout {

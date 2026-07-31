@@ -5,7 +5,7 @@ import AppIcon from './AppIcon.vue'
 import LayoutPreview from './LayoutPreview.vue'
 import { useGameStore } from '../game/inject'
 import { GAME_PRESETS } from '../game/presets'
-import { TABLE_LAYOUTS } from '../game/layouts'
+import { layoutsForPlayers } from '../game/layouts'
 import { MAX_PLAYERS, MIN_PLAYERS } from '../game/types'
 import { THEMES } from '../theme/themes'
 import { useFullscreen, useWakeLock } from '../composables/useScreen'
@@ -28,6 +28,9 @@ const lifeSteps = [-10, -1, 1, 10]
 
 const startingLifeLabel = computed(() => game.state.startingLife.toLocaleString('en-US'))
 
+/** Not every layout suits every player count, so the picker follows the count. */
+const availableLayouts = computed(() => layoutsForPlayers(game.state.playerCount))
+
 const choosePlayerCount = (count: number) => {
   game.setPlayerCount(count)
   step.value = 'layout'
@@ -49,7 +52,7 @@ const startNewGame = () => {
   >
     <div class="options">
       <button
-        v-for="tableLayout in TABLE_LAYOUTS"
+        v-for="tableLayout in availableLayouts"
         :key="tableLayout.id"
         class="option"
         type="button"
